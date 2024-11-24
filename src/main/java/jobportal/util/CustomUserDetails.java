@@ -2,7 +2,6 @@ package jobportal.util;
 
 import jobportal.entity.Users;
 import jobportal.entity.UsersType;
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

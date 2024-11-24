@@ -16,19 +16,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class UsersService {
 
-    private UsersRepository usersRepository;
-
-    private JobSeekerProfileRepository jobSeekerProfileRepository;
-    private RecruiterProfileRepository recruiterProfileRepository;
-
+    private final UsersRepository usersRepository;
+    private final JobSeekerProfileRepository jobSeekerProfileRepository;
+    private final RecruiterProfileRepository recruiterProfileRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, JobSeekerProfileRepository jobSeekerProfileRepository, RecruiterProfileRepository recruiterProfileRepository, PasswordEncoder passwordEncoder) {
+    public UsersService(UsersRepository usersRepository,
+                        JobSeekerProfileRepository jobSeekerProfileRepository,
+                        RecruiterProfileRepository recruiterProfileRepository,
+                        PasswordEncoder passwordEncoder) {
+
         this.usersRepository = usersRepository;
         this.jobSeekerProfileRepository = jobSeekerProfileRepository;
         this.recruiterProfileRepository = recruiterProfileRepository;
@@ -62,12 +65,18 @@ public class UsersService {
 
             int userId = users.getUserId();
             if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))){
-
+                RecruiterProfile recruiterProfile = recruiterProfileRepository.findById(userId).orElse(new RecruiterProfile());
+                return recruiterProfile;
             } else {
-                
+                JobSeekerProfile jobSeekerProfile = jobSeekerProfileRepository.findById(userId).orElse(new JobSeekerProfile());
+                return jobSeekerProfile;
             }
         }
-
         return null;
     }
+
+    public Optional<Users> getUserByEmail(String email) {
+        return usersRepository.findByEmail(email);
+    }
+
 }
